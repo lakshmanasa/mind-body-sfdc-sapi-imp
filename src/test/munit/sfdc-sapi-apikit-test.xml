@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd http://www.mulesoft.org/schema/mule/munit-tools http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd 
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+    <munit:config name="sfdc-sapi-apikit-test.xml" />
+    <http:request-config name="HTTP_Request_Configuration" basePath="/api">
+        <http:request-connection host="localhost" port="8082" protocol="HTTPS">
+			<tls:context >
+				<tls:trust-store path="client-truststore.jks" password="mulesoft" type="jks" insecure="true" />
+			</tls:context>
+		</http:request-connection>
+    </http:request-config>
+    <munit:test name="post:\sapi\sfdc\accounts:application\json:sfdc-sapi-config-201-application\json-FlowTest" description="Verifying functionality of [post:\sapi\sfdc\accounts:application\json:sfdc-sapi-config-201-application\json]">
+        <munit:enable-flow-sources>
+            <munit:enable-flow-source value="sfdc-sapi-main" />
+            <munit:enable-flow-source value="post:\sapi\sfdc\accounts:application\json:sfdc-sapi-config" />
+        </munit:enable-flow-sources>
+        <munit:behavior>
+            <set-payload value="#[MunitTools::getResourceAsString('scaffolder/request/post_sapi_sfdc_accounts_application_json.json')]" />
+			<munit-tools:mock-when doc:name="Mock when" doc:id="307bcc36-8bc8-4cfe-bd45-87004d3325e7" processor="salesforce-composite:execute-composite-request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="b6e6d220-9f0e-42d4-a9a5-c8ab7ff7e54d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[output application/json --- {&#10;  "compositeResponse": [&#10;    {&#10;      "body": {&#10;        "id": "a032w00000TucYwAAJ",&#10;        "success": true,&#10;        "errors": []&#10;      },&#10;      "httpHeaders": {&#10;        "Location": "/services/data/v51.0/sobjects/a__c/a032w00000TucYwAAJ"&#10;      },&#10;      "httpStatusCode": 201,&#10;      "referenceId": "a"&#10;    },&#10;    {&#10;      "body": {&#10;        "id": "a032w00000TucYxAAJ",&#10;        "success": true,&#10;        "errors": []&#10;      },&#10;      "httpHeaders": {&#10;        "Location": "/services/data/v51.0/sobjects/a__c/a032w00000TucYxAAJ"&#10;      },&#10;      "httpStatusCode": 201,&#10;      "referenceId": "a1"&#10;    },&#10;    {&#10;      "body": {&#10;        "id": "a042w00000zUZz1AAG",&#10;        "success": true,&#10;        "errors": []&#10;      },&#10;      "httpHeaders": {&#10;        "Location": "/services/data/v51.0/sobjects/b__c/a042w00000zUZz1AAG"&#10;      },&#10;      "httpStatusCode": 201,&#10;      "referenceId": "b1"&#10;    },&#10;    {&#10;      "body": {&#10;        "id": "a042w00000zUZz2AAG",&#10;        "success": true,&#10;        "errors": []&#10;      },&#10;      "httpHeaders": {&#10;        "Location": "/services/data/v51.0/sobjects/b__c/a042w00000zUZz2AAG"&#10;      },&#10;      "httpStatusCode": 201,&#10;      "referenceId": "b"&#10;    }&#10;  ]&#10;}]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+        </munit:behavior>
+        <munit:execution>
+            <http:request config-ref="HTTP_Request_Configuration" method="POST" path="/sapi/sfdc/accounts" responseTimeout="1800000">
+                <http:body ><![CDATA[#[output application/json --- {
+	"compositeRequest":[{
+		"method": "POST",
+		"url": "/services/data/v51.0/sobjects/account__c",
+		"referenceId": "a",
+		"body": {
+      "Name": "lakshman",
+      "isTest__c": true,
+      "Industry": "Enique",
+      "Subvertical__c": "other",
+      "SBQQ__TaxExempt__c": "0",
+      "CurrencyIsoCode__c": "Rupees",
+      "OwnerID__c": "abcd123",
+      "RecordTypeId__c": "abcd456",
+      "Description__c": "hi",
+      "BillingStreet__c": "Narasimha",
+      "BillingCity__c": "Guntur",
+      "BillingPostalCode__c": "522616",
+      "BillingStateCode__c": "522616",
+      "BillingCountryCode__c": "India",
+      "QS_Bill_To_Email__c": "a@gmail.com",
+      "Phone__c": "9347359767",
+      "APIMBOGUID__c": "yuywud",
+      "AccountSource__c": "postman"
+    }},
+    {
+      "method": "POST",
+      "url": "/services/data/v51.0/sobjects/contact__c",
+      "referenceId": "a",
+      "body": {
+        "AccountId__c": "1",
+        "RecordTypeId__c": "abcd456",
+        "LastName__c": "Asa",
+        "FirstName__c": "Lakshman",
+        "Phone__c": "9347359767",
+        "Email__c": "a@gmail.com"
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/services/data/v51.0/sobjects/billing__c",
+      "referenceId": "a",
+      "body": {
+        "AccountId__c": "1",
+        "CurrencyIsocode__c": "Rupees",
+        "Sync_Immediate_c": "ghkj",
+        "IntegrationStatus__c": "hygdy",
+        "IntegrationMessage__c": "hi"
+      }
+    }]}]]]></http:body>
+				<http:headers><![CDATA[#[{"Accept":"application/json","Content-Type":"application/json"}]]]></http:headers>
+            </http:request>
+        </munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="c0e77d99-fbc0-4dc8-9f2b-1131f9c78413" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+    </munit:test>
+</mule>
